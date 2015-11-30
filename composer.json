@@ -1,5 +1,5 @@
 {
-    "name": "skyscanner/jsonpath",
+    "name": "arsac/jsonpath",
     "description": "JSONPath implementation for querying and updating JSON objects",
     "type": "library",
     "keywords": ["jsonpath", "json", "path"],
