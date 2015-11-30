@@ -151,9 +151,9 @@ class JsonObject
     const TOK_FALSE = 'false';
     const TOK_NULL = 'null';
 
-    private $jsonObject = null;
-    private $smartGet = false;
-    private $hasDiverged = false;
+    protected $jsonObject = null;
+    protected $smartGet = false;
+    protected $hasDiverged = false;
 
     /**
      * Class constructor.
@@ -295,7 +295,7 @@ class JsonObject
         if ($result !== false) {
             $objs = array();
             foreach($result as &$value) {
-                $jsonObject = new JsonObject(null, $this->smartGet);
+                $jsonObject = new self(null, $this->smartGet);
                 $jsonObject->jsonObject = &$value;
                 $objs[] = $jsonObject;
             }
@@ -347,7 +347,7 @@ class JsonObject
      *
      * @return JsonObject
      */
-    public function add($jsonPath, $value, $field=null)
+    protected function add($jsonPath, $value, $field=null)
     {
         $result = $this->getReal($this->jsonObject, $jsonPath, true);
         foreach ($result as &$element) {
@@ -373,7 +373,7 @@ class JsonObject
      *
      * @return JsonObject
      */
-    public function remove($jsonPath, $field)
+    protected function remove($jsonPath, $field)
     {
         $result = $this->getReal($this->jsonObject, $jsonPath);
         foreach ($result as &$element) {
@@ -384,7 +384,7 @@ class JsonObject
         return $this;
     }
 
-    private function expressionValue(&$jsonObject, $expression)
+    protected function expressionValue(&$jsonObject, $expression)
     {
         if ($expression === self::TOK_NULL) {
             return null;
@@ -431,7 +431,7 @@ class JsonObject
         }
     }
 
-    private function booleanExpressionComparison(&$jsonObject, $leftExpr, $comparator, $rightExpr)
+    protected function booleanExpressionComparison(&$jsonObject, $leftExpr, $comparator, $rightExpr)
     {
         $left = $this->expressionValue($jsonObject, trim($leftExpr));
         $right = $this->expressionValue($jsonObject, trim($rightExpr));
@@ -455,7 +455,7 @@ class JsonObject
         }
     }
 
-    private function booleanExpressionAnds(&$jsonObject, $expression)
+    protected function booleanExpressionAnds(&$jsonObject, $expression)
     {
         $values = preg_split(self::RE_AND, $expression);
         $match = array();
@@ -487,7 +487,7 @@ class JsonObject
         return true;
     }
 
-    private function booleanExpression(&$jsonObject, $expression)
+    protected function booleanExpression(&$jsonObject, $expression)
     {
         $ands = preg_split(self::RE_OR, $expression);
         foreach ($ands as $subexpr) {
@@ -498,7 +498,7 @@ class JsonObject
         return false;
     }
 
-    private function matchValidExpression($jsonPath, &$result, $offset=0)
+    protected function matchValidExpression($jsonPath, &$result, $offset=0)
     {
         if ($jsonPath[$offset] != self::TOK_SELECTOR_BEGIN) {
             return false;
@@ -537,7 +537,7 @@ class JsonObject
         return 0;
     }
 
-    private function opChildName(&$jsonObject, $childName, &$result, $createInexistent = false)
+    protected function opChildName(&$jsonObject, $childName, &$result, $createInexistent = false)
     {
         if (is_array($jsonObject)) {
             if ($childName === self::TOK_ALL) {
@@ -661,7 +661,7 @@ class JsonObject
         return false;
     }
 
-    private function opRecursiveSelector(&$jsonObject, $childName, &$result)
+    protected function opRecursiveSelector(&$jsonObject, $childName, &$result)
     {
         //$result[] = &$jsonObject;
         $this->opChildName($jsonObject, $childName, $result);
@@ -672,7 +672,7 @@ class JsonObject
         }
     }
 
-    private function getReal(&$jsonObject, $jsonPath, $createInexistent = false)
+    protected function getReal(&$jsonObject, $jsonPath, $createInexistent = false)
     {
         $match = array();
         if (preg_match(self::RE_ROOT_OBJECT, $jsonPath, $match) === 0) {
