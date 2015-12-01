@@ -556,7 +556,7 @@ class JsonObject
         return false;
     }
 
-    private function opChildSelector(&$jsonObject, $contents, &$result, $createInexistent = false)
+    protected function opChildSelector(&$jsonObject, $contents, &$result, $createInexistent = false)
     {
         if (is_array($jsonObject)) {
             $match = array();
